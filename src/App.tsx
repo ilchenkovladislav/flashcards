@@ -256,18 +256,21 @@ const flashcards: FlashCardData[] = [
 ];
 export default function FlashCardApp() {
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
   const [answeredCorrectly, setAnsweredCorrectly] = useState<boolean[]>(
     new Array(flashcards.length).fill(false),
   );
 
   const handleNext = () => {
     setCurrentCardIndex((prevIndex) => (prevIndex + 1) % flashcards.length);
+    setDirection(1);
   };
 
   const handlePrevious = () => {
     setCurrentCardIndex(
       (prevIndex) => (prevIndex - 1 + flashcards.length) % flashcards.length,
     );
+    setDirection(-1);
   };
 
   const handleAnswer = (isCorrect: boolean) => {
@@ -279,14 +282,35 @@ export default function FlashCardApp() {
     handleNext();
   };
 
+  const variants = {
+    enter: (direction: number) => {
+      return {
+        x: direction > 0 ? 100 : -100,
+        opacity: 0,
+      };
+    },
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => {
+      return {
+        x: direction < 0 ? 100 : -100,
+        opacity: 0,
+      };
+    },
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" custom={direction}>
         <motion.div
           key={currentCardIndex}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
+          custom={direction}
+          variants={variants}
+          initial="enter"
+          animate="center"
+          exit="exit"
           transition={{ duration: 0.3 }}
         >
           <FlashCard card={flashcards[currentCardIndex]} />

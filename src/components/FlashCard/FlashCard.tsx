@@ -21,7 +21,7 @@ export function FlashCard({ card }: FlashCardProps) {
     >
       <div
         className={`relative h-full w-full transition-all duration-500 [transform-style:preserve-3d] ${
-          isFlipped ? "[transform:rotateY(180deg)]" : ""
+          isFlipped ? "[transform:rotateY(-180deg)]" : ""
         }`}
       >
         <div className="absolute flex h-full w-full items-center justify-center rounded-lg border border-gray-200 bg-white p-4 shadow-lg [backface-visibility:hidden]">
